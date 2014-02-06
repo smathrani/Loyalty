@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Loyalty</string>
+    
+    
+    <string name="welcome">Welcome</string>
+	<string name="username">Username</string>
+	<string name="password">Password</string>
+	
+	<string name="log_in">Log In</string>
+	<string name="sign_up">Sign Up</string>
+	
+	<string name="username_taken">Sorry, that username has been taken</string>
+	<string name="incorrect_password">Sorry, that is an incorrect password</string>
+	
+</resources>
