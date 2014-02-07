@@ -1,0 +1,3 @@
+# view AndroidManifest.xml #generated:11
+-keep class net.sourceforge.zbar.android.CameraTest.CameraTestActivity { <init>(...); }
+
