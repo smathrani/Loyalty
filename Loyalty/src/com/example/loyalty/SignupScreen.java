@@ -22,28 +22,27 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class LoginScreen extends Activity {
+public class SignupScreen extends Activity {
 
 	final String IP = "160.39.205.193";
-	
 	int port = 2000;
 	
 	@SuppressLint("HandlerLeak")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.login_screen);
+		setContentView(R.layout.singup_screen);
 		
 		//allowing access to the shared preferences
 		final SharedPreferences prefs = getSharedPreferences("com.example.loyalty", 0);
 		final SharedPreferences.Editor edit = prefs.edit();
 		
-		//creating the EditTexts and Buttons
-		final TextView error = (TextView) findViewById(R.id.error);
-		final EditText username = (EditText) findViewById(R.id.usernameEditText);
-		final EditText password = (EditText) findViewById(R.id.passwordEditText);
-		final Button logIn = (Button) findViewById(R.id.logInButton);
-		final Button signUp = (Button) findViewById(R.id.signUpButton);
+		final TextView error = (TextView) findViewById(R.id.signupError);
+		final EditText username = (EditText) findViewById(R.id.createUsername);
+		final EditText password = (EditText) findViewById(R.id.createPassword);
+		final EditText verifyPassword = (EditText) findViewById(R.id.verifyPassword);
+		final EditText email = (EditText) findViewById(R.id.emailAddress);
+		final Button signUp = (Button) findViewById(R.id.signup);
 		
 		//creating the handler
 		final Handler handler = new Handler()
@@ -61,60 +60,44 @@ public class LoginScreen extends Activity {
 						edit.putString("password", password.getText()+"");
 					edit.apply();
 					Log.d("edit:", edit.toString());
-					Intent verified = new Intent(LoginScreen.this, MainActivity.class);
+					Intent verified = new Intent(SignupScreen.this, MainActivity.class);
 					startActivity(verified);
 					finish();
 				}
 				else if(msg.what == 1) //incorrect usernmae or password
 				{
-					error.setText("Sorry, that password is incorrect");
+					error.setText("Sorry, that username is already taken");
 				}
 			}
 		};
 		
-		//auto logging in
-		if (prefs.contains("username") && prefs.contains("password"))
-		{
-			String un = prefs.getString("username", "");
-			String pw = prefs.getString("password", "");
-			Log.d("AutoLog un", un);
-			Log.d("AutoLog pw", pw);
-			new ServCon(IP, port, handler, "login\n"+un+"\n"+pw).execute();
-		}
-		
-		
-		
-		//manual login in
-		logIn.setOnClickListener(new OnClickListener() {
-			
-			public void onClick(View v) {
-				
-				error.setText("logIn");
-				
-				String un = null;
-				String pw = null;
-				
-				un = username.getText()+"";
-				pw = password.getText()+"";
-				
-				if (un.length()>0 && pw.length()>0)
-				{
-					new ServCon(IP, port, handler, "login\n"+un+"\n"+pw).execute();
-				}
-			}
-		});
-		
-		//manual sign up
 		signUp.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
+								
+				String un = null;
+				String pw = null;
+				String pwv = null;
+				String em = null;
 				
-				Intent signUp = new Intent(LoginScreen.this, SignupScreen.class);
-				startActivity(signUp);
+				un = username.getText()+"";
+				pw = password.getText()+"";
+				pwv = verifyPassword.getText()+"";
+				em = email.getText()+"";
+				
+				if (un.length()>0 && pw.length()>0 && em.length()>0)
+				{
+					if(pw.equals(pwv))
+						new ServCon(IP, port, handler, "login\n"+un+"\n"+pw+"\n"+em+"\n\n").execute();
+					else
+						error.setText("Passwords do not match");
+				}
+				else
+					error.setText("Please fill in all the fields");
+				
 			}
 		});
 	}
-	
 	
 	private class ServCon extends AsyncTask<String, Void, String>
 	{
@@ -141,14 +124,10 @@ public class LoginScreen extends Activity {
 				Log.d("Waiting", "For reply");
 				String reply = r.readLine();
 				Log.d("Reply", reply);
-				if(reply.equals("accepted"))
+				if(reply.equals("available"))
 					h.sendMessage(h.obtainMessage(0));
-				else if(reply.equals("invalid username") || reply.equals("invalid password"))
+				else if(reply.equals("unavailable"))
 					h.sendMessage(h.obtainMessage(1));
-				else if (reply.equals("available"))
-					h.sendMessage(h.obtainMessage(2));
-				else if (reply.equals("unavailable"))
-					h.sendMessage(h.obtainMessage(3));
 				
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
@@ -169,5 +148,5 @@ public class LoginScreen extends Activity {
 			this.data = data;
 			this.h = h;
 		}
-	}		
+	}	
 }

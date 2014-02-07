@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/welcomeSignup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:text="@string/create_account"
+        android:textSize="30sp" />
+
+    <EditText
+        android:id="@+id/createUsername"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/createPassword"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:hint="@string/username">
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/createPassword"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/verifyPassword"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:hint="@string/password" />
+
+    <EditText
+        android:id="@+id/verifyPassword"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:hint="@string/verify_password" />
+
+    <EditText
+        android:id="@+id/emailAddress"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/verifyPassword"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"/>
+
+    <Button
+        android:id="@+id/signup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/emailAddress"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:text="@string/sign_up" />
+
+    <TextView
+        android:id="@+id/signupError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/createUsername"
+        android:layout_centerHorizontal="true"
+        android:layout_alignRight="@+id/signupButton"
+        android:text=""
+        android:textColor="@android:color/holo_red_dark" />
+
+</RelativeLayout>
