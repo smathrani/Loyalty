@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <color name = "app">#4d1b2f</color>
+    <color name = "loginButton">#9e332e</color>
+    <color name = "signupButton">#eb6528</color>
+    <color name = "white">#ffffff</color>
+    <color name = "light_gray">#d6d2d9</color>
+        
+    
+        
+    
+</resources>

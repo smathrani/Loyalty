@@ -9,9 +9,16 @@
 	<string name="password">Password</string>
 	
 	<string name="log_in">Log In</string>
+	<string name="login">Log In</string>
 	<string name="sign_up">Sign Up</string>
+	<string name="name">Name</string>
 	
 	<string name="hello_world">Hello world!!</string>
+	<string name="create_account">Create your account!</string>
+	<string name="email">Email address</string>
+	<string name="verify_password">Retype your password</string>
+	<string name="username_email">username or email address</string>
+	<string name="app_id">710793302284679</string>
 	
 	<string name="username_taken">Sorry, that username has been taken</string>
 	<string name="incorrect_password">Sorry, that is an incorrect password</string>

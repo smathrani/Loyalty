@@ -7,16 +7,21 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TableRow.LayoutParams;
@@ -24,30 +29,25 @@ import android.widget.TextView;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class MainActivity extends Activity {
 	SharedPreferences prefs;// = getSharedPreferences("com.example.loyalty", 0);
 	SharedPreferences.Editor edit;// = prefs.edit();
 	TextView t;// = (TextView) findViewById(R.id.textView1);
 	Handler handler;
-	
-	@Override
-	protected void onNewIntent(Intent intent)
-	{
-		super.onNewIntent(intent);
-		setIntent(intent);
-//		Bundle b = intent.getExtras();
-//		prefs = getSharedPreferences("com.example.loyalty", 0);
-//		Log.d("Hi", b.getString("barcode", "qr"));
-//		edit = prefs.edit();
-//		edit.putString("barcode", b.getString("barcode", "didnt find"));
-	}
+	final int ERR = -1;
+	final int FINDRESTAURANTS = 1;
+	final int DEFAULT = 0;
+	final int PORT = 2000;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main2);
-		final Button b = (Button)findViewById(R.id.button1);
+		Log.d("***", "at beginning2");
+		setContentView(R.layout.main_screen);
+		final ImageButton b = (ImageButton)findViewById(R.id.cameraButton);
+		Log.d("***", "kjbfv.zdfjv");
 		b.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
@@ -57,25 +57,47 @@ public class MainActivity extends Activity {
 //				finish();
 			}
 		});
+		Log.d("***", "after button onclick");
 		prefs = getSharedPreferences("com.example.loyalty", 0);
-		t = (TextView) findViewById(R.id.textView1);
+		//t = (TextView) findViewById(R.id.textView1);
+		final TableLayout names = (TableLayout) findViewById(R.id.table);
+		DisplayMetrics metrics = getResources().getDisplayMetrics();
+		final int height = metrics.heightPixels;
+		Log.d("**Safe", "at handler");
 		handler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) // Handling the different
 													// server comms
 			{
-				Log.d("b", msg + "");
-				if (msg.what == 0) // login successful or account created
+				Log.d("***handler rcvd", msg + "");
+				if (msg.what == ERR) // login successful or account created
 				{
+					//TODO DIEEEE
+				}
+				if(msg.what == FINDRESTAURANTS)
+				{
+					Log.d("***********Received*************",msg.obj+"");
+					StringTokenizer tk = new StringTokenizer(msg.obj+"", "\n");
+					ArrayList<String> list = new ArrayList<String>();
+					names.removeAllViews();
+					while(tk.hasMoreTokens())
+					{
+						String str = tk.nextToken();
+						list.add(str);
+						StringTokenizer stk = new StringTokenizer(str, ",");
+						String name = stk.nextToken();
+						stk.nextToken();
+						String points = stk.nextToken();
+						View innerTable = createRow(name, points);
+						innerTable.setPadding(0, 0, 0, height/80);
+						names.addView(innerTable, new TableLayout.LayoutParams(
+						LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+					}
 				}
 			}
 		};
-
-		TableLayout logos = (TableLayout) findViewById(R.id.logo_table);
-		TableLayout names = (TableLayout) findViewById(R.id.name_table);
-		TableLayout points = (TableLayout) findViewById(R.id.points_table);
-
-		ArrayList<String> list = new ArrayList<String>();
+		new ServCon(PORT, handler, FINDRESTAURANTS+"findMyRestaurants").execute();
+/*		ArrayList<String> list = new ArrayList<String>();
 		try {
 			FileOutputStream fos1 = openFileOutput("storage_file", Context.MODE_PRIVATE);
 			Scanner s = new Scanner(openFileInput("storage_file"));
@@ -99,11 +121,53 @@ public class MainActivity extends Activity {
 			s.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 		// TableRow tr1 = new TableRow(this);
 		// tr1.setOrientation(TableRow.HORIZONTAL);
+	}
+	
+	@SuppressLint("ResourceAsColor")
+	public View createRow(String name, String points) {
+		
+		TableLayout tempTable = new TableLayout(this);
+		TableRow row = new TableRow(this);
+
+		TableRow.LayoutParams imagePar = new TableRow.LayoutParams(0,
+				LayoutParams.WRAP_CONTENT, 1f);
+		TableRow.LayoutParams namePar = new TableRow.LayoutParams(0,
+				LayoutParams.WRAP_CONTENT, 5f);
+		TableRow.LayoutParams pointPar = new TableRow.LayoutParams(0,
+				LayoutParams.WRAP_CONTENT, 1f);
+
+		ImageView logo = new ImageView(this);
+		logo.setLayoutParams(imagePar);
+		logo.setImageResource(R.drawable.ic_launcher);
+
+		TextView nameTV = new TextView(this);
+		nameTV.setLayoutParams(namePar);
+		nameTV.setText(" "+name);
+		nameTV.setTextColor(Color.BLACK);
+		nameTV.setTextSize(18);
+
+		TextView pointsTV = new TextView(this);
+		pointsTV.setLayoutParams(pointPar);
+		pointsTV.setText(points);
+		pointsTV.setTextColor(Color.BLACK);
+		pointsTV.setTextSize(18);
+
+
+		row.addView(logo);
+		row.addView(nameTV);
+		row.addView(pointsTV);
+		row.setGravity(Gravity.CENTER_VERTICAL);
+		
+		row.setBackgroundResource(R.color.white);
+		
+		tempTable.addView(row);
+		
+		return tempTable;
 	}
 
 	@Override
@@ -116,15 +180,16 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
-		String code = data.getStringExtra("barcode");
-		String un = prefs.getString("username","");
-		String pw = prefs.getString("password", "");
-		new ServCon(2000, handler, "findMyRestaurants");
+		if(resultCode >= 0)
+		{
+			String code = data.getStringExtra("barcode");
+			Log.d("*******CODE********", code);
+			new ServCon(PORT, handler, FINDRESTAURANTS+"addPointsForRestaurant "+code+"\nfindMyRestaurants").execute();
+		}
 	}
 	
 	private class ServCon extends AsyncTask<String, Void, String>
 	{
-		String ip;
 		int port;
 		String data;
 		Handler h;
@@ -134,7 +199,7 @@ public class MainActivity extends Activity {
 			try
 			{
 				@SuppressWarnings("resource")
-				Socket sock = new Socket("islamabad.clic.cs.columbia.edu", 2000);
+				Socket sock = new Socket("islamabad.clic.cs.columbia.edu", port);
 				String inetaddr = sock.getInetAddress().toString();
 				Log.d("Connected to", inetaddr);
 				Log.d("Sending", data);
@@ -142,25 +207,46 @@ public class MainActivity extends Activity {
 				PrintWriter o = new PrintWriter(new OutputStreamWriter(sock.getOutputStream()), true);
 				// Receive data through r.readLine
 				BufferedReader r = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+				Log.d("****LGN*****", "ready to log in");
 				o.println("login\n"+prefs.getString("username", "")+"\n"+prefs.getString("password", ""));
-				if(!r.readLine().equals("available"))
+				Log.d("****LGN*****", "sent login data");
+				Log.d("**LGN** dat was", prefs.getString("password", "")+" "+prefs.getString("username", ""));
+				int code = DEFAULT;
+				int c = data.charAt(0) - '0';
+				if(c >= -9 && c <= 9)
 				{
-					h.sendMessage(h.obtainMessage(-1, "login failed"));
+					code = c;
+					data = data.substring(1);
+				}
+				String repl = r.readLine();
+				Log.d("******Repl******", repl);
+				if(!repl.equals("accepted"))
+				{
+					h.sendMessage(h.obtainMessage(-1, repl));
 					return "";
 				}
-				o.println(data);
-				String reply = "";
-				String l = null;
-				while(!(l = r.readLine()).equals("[next cmd]"))
+				Log.d("***Data: ", data);
+				StringTokenizer tk = new StringTokenizer(data, "\n");
+				while(tk.hasMoreTokens())
 				{
-					if(l.equals("[connection terminated]"))
+					String token = tk.nextToken();
+					o.println(token);
+					String reply = "";
+					String l = null;
+					while(!(l = r.readLine()).equals("[next cmd]"))
 					{
-						h.sendMessage(h.obtainMessage(0, reply));
-						return "";
+						Log.d("***Line:", l);
+						if(l.equals("[connection terminated]"))
+						{
+							Log.d("***Bad reply", "terminated");
+							h.sendMessage(h.obtainMessage(code, reply));
+							return "";
+						}
+						reply += l + "\n";
 					}
-					reply += l + "\n";
+					Log.d("**prepping return", reply);
+					h.sendMessage(h.obtainMessage(code, reply));
 				}
-				h.sendMessage(h.obtainMessage(0, reply));
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

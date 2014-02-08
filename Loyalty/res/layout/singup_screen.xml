@@ -1,76 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-    <TextView
-        android:id="@+id/welcomeSignup"
+    android:layout_height="match_parent"
+    android:background="@color/app"
+    android:paddingBottom="@dimen/double_margin"
+    android:paddingLeft="@dimen/double_margin"
+    android:paddingRight="@dimen/double_margin"
+    android:paddingTop="@dimen/double_margin" >
+    
+    <ImageView
+        android:id="@+id/logoSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
+        android:src="@drawable/ic_launcher" />
+    
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="240dp"
+        android:layout_below="@id/logoSmall"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:text="@string/create_account"
-        android:textSize="30sp" />
+        android:orientation="vertical" >
+        
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:ems="10"
+            android:hint="@string/username" >
 
-    <EditText
-        android:id="@+id/createUsername"
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/createPassword"
-        android:layout_centerHorizontal="true"
-        android:ems="10"
-        android:hint="@string/username">
+            <requestFocus />
+        </EditText>
 
-        <requestFocus />
-    </EditText>
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:ems="10"
+            android:hint="@string/password" 
+            android:inputType="textPassword"/>
+        
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:ems="10"
+            android:hint="@string/email" />
+        
+               <EditText
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:ems="10"
+            android:hint="@string/name" />
 
-    <EditText
-        android:id="@+id/createPassword"
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/verifyPassword"
-        android:layout_centerHorizontal="true"
-        android:ems="10"
-        android:inputType="textPassword"
-        android:hint="@string/password" />
-
-    <EditText
-        android:id="@+id/verifyPassword"
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:ems="10"
-        android:inputType="textPassword"
-        android:hint="@string/verify_password" />
-
-    <EditText
-        android:id="@+id/emailAddress"
-        android:layout_width="240dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/verifyPassword"
-        android:layout_centerHorizontal="true"
-        android:ems="10"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress"/>
-
-    <Button
-        android:id="@+id/signup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/emailAddress"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:text="@string/sign_up" />
-
-    <TextView
-        android:id="@+id/signupError"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/createUsername"
-        android:layout_centerHorizontal="true"
-        android:layout_alignRight="@+id/signupButton"
-        android:text=""
-        android:textColor="@android:color/holo_red_dark" />
+        <Button
+            android:id="@+id/signupButton"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:text="@string/sign_up"
+            android:background="@color/signupButton" />
+    
+    </LinearLayout>
 
 </RelativeLayout>

@@ -23,9 +23,9 @@ import android.widget.TextView;
 
 public class LoginScreen extends Activity {
 
-	final String IP = "islamabad.clic.cs.columbia.edu";
+	final static String IP = "islamabad.clic.cs.columbia.edu";
 	
-	int port = 2000;
+	static int port = 2000;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +38,9 @@ public class LoginScreen extends Activity {
 		
 		//creating the EditTexts and Buttons
 		final TextView error = (TextView) findViewById(R.id.error);
-		final EditText username = (EditText) findViewById(R.id.usernameEditText);
-		final EditText password = (EditText) findViewById(R.id.passwordEditText);
-		final Button logIn = (Button) findViewById(R.id.logInButton);
-		final Button signUp = (Button) findViewById(R.id.signUpButton);
+		final EditText username = (EditText) findViewById(R.id.username);
+		final EditText password = (EditText) findViewById(R.id.password);
+		final Button logIn = (Button) findViewById(R.id.loginButton);
 		
 		error.setText("Hi!");
 		//creating the handler
@@ -106,29 +105,10 @@ public class LoginScreen extends Activity {
 				}
 			}
 		});
-		
-		//manual sign up
-		signUp.setOnClickListener(new OnClickListener() {
-			
-			public void onClick(View v) {
-				
-				error.setText("signUp");
-				String un = null;
-				String pw = null;
-				
-				un = username.getText()+"";
-				pw = password.getText()+"";
-				
-				if (un.length()>0 && pw.length()>0)
-				{
-					new ServCon(IP, port, handler, "signup\n"+un+"\n"+pw+"\ngmail\ns\nm").execute();
-				}
-			}
-		});
 	}
 	
 	
-	private class ServCon extends AsyncTask<String, Void, String>
+	public static class ServCon extends AsyncTask<String, Void, String>
 	{
 		String ip;
 		int port;

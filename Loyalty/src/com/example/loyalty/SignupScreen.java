@@ -38,12 +38,12 @@ public class SignupScreen extends Activity {
 		final SharedPreferences prefs = getSharedPreferences("com.example.loyalty", 0);
 		final SharedPreferences.Editor edit = prefs.edit();
 		
-		final TextView error = (TextView) findViewById(R.id.signupError);
-		final EditText username = (EditText) findViewById(R.id.createUsername);
-		final EditText password = (EditText) findViewById(R.id.createPassword);
-		final EditText verifyPassword = (EditText) findViewById(R.id.verifyPassword);
-		final EditText email = (EditText) findViewById(R.id.emailAddress);
-		final Button signUp = (Button) findViewById(R.id.signup);
+//		final TextView error = (TextView) findViewById(R.id.signupError);
+		final EditText username = (EditText) findViewById(R.id.username);
+		final EditText password = (EditText) findViewById(R.id.password);
+//		final EditText verifyPassword = (EditText) findViewById(R.id.verifyPassword);
+		final EditText email = (EditText) findViewById(R.id.email);
+		final Button signUp = (Button) findViewById(R.id.signupButton);
 		
 		//creating the handler
 		final Handler handler = new Handler()
@@ -52,9 +52,9 @@ public class SignupScreen extends Activity {
 			public void handleMessage(Message msg) //Handling the different server comms
 			{
 				Log.d("b", msg+"");
-				if(msg.what == 0) //login successful or account created
+				if(msg.what == 2) //login successful or account created
 				{	
-					error.setText("available");
+//					error.setText("available");
 					if(!prefs.contains("username") || prefs.getString("username", "").length() == 0)
 						edit.putString("username", username.getText()+"");
 					if(!prefs.contains("password") || prefs.getString("password", "").length() == 0)
@@ -67,7 +67,7 @@ public class SignupScreen extends Activity {
 				}
 				else if(msg.what == 1) //incorrect usernmae or password
 				{
-					error.setText("Sorry, that username is already taken");
+//					error.setText("Sorry, that username is already taken");
 				}
 			}
 		};
@@ -83,18 +83,18 @@ public class SignupScreen extends Activity {
 				
 				un = username.getText()+"";
 				pw = password.getText()+"";
-				pwv = verifyPassword.getText()+"";
+//				pwv = verifyPassword.getText()+"";
 				em = email.getText()+"";
 				
 				if (un.length()>0 && pw.length()>0 && em.length()>0)
 				{
-					if(pw.equals(pwv))
-						new ServCon(port, handler, "login\n"+un+"\n"+pw+"\n"+em+"\n\n").execute();
-					else
-						error.setText("Passwords do not match");
+					if(true)
+						new ServCon(port, handler, "signup\n"+un+"\n"+pw+"\n"+em+"\n\n").execute();
+//					else
+//						error.setText("Passwords do not match");
 				}
-				else
-					error.setText("Please fill in all the fields");
+//				else
+//					error.setText("Please fill in all the fields");
 				
 			}
 		});

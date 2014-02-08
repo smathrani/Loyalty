@@ -108,6 +108,14 @@ public class CameraTestActivity extends Activity
             mCamera = null;
         }
     }
+    
+    @Override
+    public void onBackPressed()
+    {
+    	setResult(-1);
+    	finish();
+    	//Do nothing
+    }
 
     private Runnable doAutoFocus = new Runnable() {
             public void run() {
