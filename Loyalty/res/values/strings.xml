@@ -11,6 +11,8 @@
 	<string name="log_in">Log In</string>
 	<string name="sign_up">Sign Up</string>
 	
+	<string name="hello_world">Hello world!!</string>
+	
 	<string name="username_taken">Sorry, that username has been taken</string>
 	<string name="incorrect_password">Sorry, that is an incorrect password</string>
 	

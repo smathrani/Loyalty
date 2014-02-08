@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 public class LoginScreen extends Activity {
 
-	final String IP = "160.39.205.193";
+	final String IP = "islamabad.clic.cs.columbia.edu";
 	
 	int port = 2000;
 	
