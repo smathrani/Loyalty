@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/double_margin" >
     
     <ImageView
-        android:id="@+id/logoSmall"
+        android:id="@+id/logoSignup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -20,12 +20,17 @@
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="240dp"
-        android:layout_below="@id/logoSmall"
+        android:layout_below="@id/logoSignup"
         android:layout_centerHorizontal="true"
-        android:orientation="vertical" >
+        android:paddingBottom="@dimen/half_margin"
+    	android:paddingLeft="@dimen/half_margin"
+    	android:paddingRight="@dimen/half_margin"
+    	android:paddingTop="@dimen/half_margin"
+        android:orientation="vertical"
+        android:background="@color/white" >
         
         <EditText
-            android:id="@+id/username"
+            android:id="@+id/usernameSignup"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:ems="10"
@@ -35,7 +40,7 @@
         </EditText>
 
         <EditText
-            android:id="@+id/password"
+            android:id="@+id/passwordSignup"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:ems="10"
@@ -43,26 +48,35 @@
             android:inputType="textPassword"/>
         
         <EditText
-            android:id="@+id/email"
+            android:id="@+id/emailSignup"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:ems="10"
+            android:inputType="textEmailAddress"
             android:hint="@string/email" />
         
-               <EditText
-            android:id="@+id/name"
+        <EditText
+            android:id="@+id/nameSignup"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:ems="10"
             android:hint="@string/name" />
 
         <Button
-            android:id="@+id/signupButton"
+            android:id="@+id/signup"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:text="@string/sign_up"
             android:background="@color/signupButton" />
     
     </LinearLayout>
+    
+    <TextView
+        android:id="@+id/errorSignup"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/logoSignup"
+        android:layout_above="@id/linearLayout1"
+        android:text="" />
 
 </RelativeLayout>

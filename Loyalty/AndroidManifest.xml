@@ -32,6 +32,10 @@
             android:name="com.example.loyalty.MainActivity"
             android:label="main_menu"
             android:screenOrientation = "portrait" />
+        <activity
+            android:name="com.example.loyalty.Carousel"
+            android:label="main_menu"
+            android:screenOrientation = "portrait" />
         <activity 
             android:name="com.example.loyalty.CameraPreview"
             android:label="CP"

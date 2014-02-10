@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/double_margin" >
 
     <ImageView
-        android:id="@+id/logoSmall"
+        android:id="@+id/logoLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -20,9 +20,14 @@
         android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
         android:layout_height="200dp"
-        android:layout_below="@id/logoSmall"
+        android:layout_below="@id/logoLogin"
         android:layout_centerHorizontal="true"
-        android:orientation="vertical" >
+        android:paddingBottom="@dimen/half_margin"
+    	android:paddingLeft="@dimen/half_margin"
+    	android:paddingRight="@dimen/half_margin"
+    	android:paddingTop="@dimen/half_margin"
+        android:orientation="vertical"
+        android:background="@color/white" >
 
         <EditText
             android:id="@+id/username"
@@ -43,7 +48,7 @@
             android:inputType="textPassword"/>
 
         <Button
-            android:id="@+id/loginButton"
+            android:id="@+id/login"
             android:layout_width="match_parent"
             android:layout_height="80dp"
             android:text="@string/login"
@@ -54,11 +59,11 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout1"
-        android:layout_alignLeft="@+id/linearLayout1"
-        android:text="TextView" />
+        android:id="@+id/errorLogin"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:layout_below="@id/logoLogin"
+        android:layout_above="@id/linearLayout1"
+        android:text="" />
 
 </RelativeLayout>

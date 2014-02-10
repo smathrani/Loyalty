@@ -37,10 +37,10 @@ public class LoginScreen extends Activity {
 		final SharedPreferences.Editor edit = prefs.edit();
 		
 		//creating the EditTexts and Buttons
-		final TextView error = (TextView) findViewById(R.id.error);
+		final TextView error = (TextView) findViewById(R.id.errorLogin);
 		final EditText username = (EditText) findViewById(R.id.username);
 		final EditText password = (EditText) findViewById(R.id.password);
-		final Button logIn = (Button) findViewById(R.id.loginButton);
+		final Button logIn = (Button) findViewById(R.id.login);
 		
 		error.setText("Hi!");
 		//creating the handler

@@ -38,11 +38,10 @@ public class SignupScreen extends Activity {
 		final SharedPreferences prefs = getSharedPreferences("com.example.loyalty", 0);
 		final SharedPreferences.Editor edit = prefs.edit();
 		
-//		final TextView error = (TextView) findViewById(R.id.signupError);
+		final TextView error = (TextView) findViewById(R.id.errorSignup);
 		final EditText username = (EditText) findViewById(R.id.username);
 		final EditText password = (EditText) findViewById(R.id.password);
-//		final EditText verifyPassword = (EditText) findViewById(R.id.verifyPassword);
-		final EditText email = (EditText) findViewById(R.id.email);
+		final EditText email = (EditText) findViewById(R.id.emailSignup);
 		final Button signUp = (Button) findViewById(R.id.signupButton);
 		
 		//creating the handler
@@ -67,7 +66,7 @@ public class SignupScreen extends Activity {
 				}
 				else if(msg.what == 1) //incorrect usernmae or password
 				{
-//					error.setText("Sorry, that username is already taken");
+					error.setText("Sorry, that username is already taken");
 				}
 			}
 		};
@@ -78,23 +77,16 @@ public class SignupScreen extends Activity {
 								
 				String un = null;
 				String pw = null;
-				String pwv = null;
 				String em = null;
 				
 				un = username.getText()+"";
 				pw = password.getText()+"";
-//				pwv = verifyPassword.getText()+"";
 				em = email.getText()+"";
 				
 				if (un.length()>0 && pw.length()>0 && em.length()>0)
-				{
-					if(true)
-						new ServCon(port, handler, "signup\n"+un+"\n"+pw+"\n"+em+"\n\n").execute();
-//					else
-//						error.setText("Passwords do not match");
-				}
-//				else
-//					error.setText("Please fill in all the fields");
+					new ServCon(LoginScreen.IP, port, handler, "signup\n"+un+"\n"+pw+"\n"+em+"\n\n").execute();
+				else
+					error.setText("Please fill in all the fields");
 				
 			}
 		});
@@ -112,7 +104,7 @@ public class SignupScreen extends Activity {
 			try
 			{
 				@SuppressWarnings("resource")
-				Socket sock = new Socket("islamabad.clic.cs.columbia.edu", 2000);
+				Socket sock = new Socket(ip, port);
 				String inetaddr = sock.getInetAddress().toString();
 				Log.d("Connected to", inetaddr);
 				Log.d("Sending", data);
@@ -146,8 +138,9 @@ public class SignupScreen extends Activity {
 			return data;
 		}
 		
-		public ServCon(int port, Handler h, String data)
+		public ServCon(String ip, int port, Handler h, String data)
 		{
+			this.ip = ip;
 			this.port = port;
 			this.data = data;
 			this.h = h;

@@ -1,7 +1,5 @@
 package com.example.loyalty;
 
-import java.util.Arrays;
-
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -10,6 +8,7 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,7 +18,6 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.*;
 import android.view.View.OnClickListener;
-import android.webkit.WebView.FindListener;
 import android.widget.Button;
 
 public class MainFragment extends Fragment {
@@ -27,6 +25,8 @@ public class MainFragment extends Fragment {
 	private static final String TAG = "MainFragment";
 	SharedPreferences prefs;
 	SharedPreferences.Editor edit;
+	Handler handler;
+	boolean launched;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, 
@@ -41,6 +41,7 @@ public class MainFragment extends Fragment {
 	    edit = prefs.edit();
 	    String un = null;
 	    String pw = null;
+	    launched = false;
 	    Handler h = new Handler(){
 	    	
 			@Override
@@ -56,6 +57,31 @@ public class MainFragment extends Fragment {
 				{
 					edit.remove("username"); edit.remove("password"); edit.apply();
 				}
+			}
+	    };
+	    handler = new Handler(){
+	    	
+			@Override
+			public void handleMessage(Message msg) //Handling the different server comms
+			{
+				Log.d(msg.what+"",msg.obj+"");
+				if(msg.what == 0 || msg.what == 2)
+				{
+					Log.d("****", "tryna main act");
+					if(!launched)
+					{
+						launched = true;
+						Log.d("****", "about to destroy fb activity");
+						Activity a = getActivity();
+						if(a != null)
+						{
+							Intent verified = new Intent(a.getApplicationContext(), MainActivity.class);
+							startActivity(verified);
+							a.finish();
+						}
+					}
+				}
+//				else new LoginScreen.ServCon(LoginScreen.IP, LoginScreen.port, this, "login\n"+username+"\n"+password).execute();
 			}
 	    };
 	    if(prefs.contains("username") && prefs.contains("password"))
@@ -151,29 +177,14 @@ public class MainFragment extends Fragment {
 					{
 						final String username = user.getId();
 						final String password = user.getUsername();
-						Handler h = new Handler(){
-					    	
-							@Override
-							public void handleMessage(Message msg) //Handling the different server comms
-							{
-								Log.d(msg.what+"",msg.obj+"");
-								if(msg.what == 0 || msg.what == 2)
-								{
-									Log.d("****", "tryna main act");
-									Intent verified = new Intent(getActivity(), MainActivity.class);
-									startActivity(verified);
-									getActivity().finish();
-								}
-								else new LoginScreen.ServCon(LoginScreen.IP, LoginScreen.port, this, "login\n"+username+"\n"+password).execute();
-							}
-					    };
+						
 						if(!prefs.getString("username", "").equals(user.getId()) || !prefs.getString("password", "").equals(user.getUsername()))
 						{
 							edit.putString("username", user.getId()); edit.putString("password", user.getUsername());
 							edit.apply();
-							new LoginScreen.ServCon(LoginScreen.IP, LoginScreen.port, h, "signup\n"+user.getId()+"\n"+user.getUsername()+"\n\n\n").execute();
+							new LoginScreen.ServCon(LoginScreen.IP, LoginScreen.port, handler, "signup\n"+user.getId()+"\n"+user.getUsername()+"\n\n\n").execute();
 						}
-						else new LoginScreen.ServCon(LoginScreen.IP, LoginScreen.port, h, "login\n"+username+"\n"+password).execute();
+						else new LoginScreen.ServCon(LoginScreen.IP, LoginScreen.port, handler, "login\n"+username+"\n"+password).execute();
 					}
 				}
 			});

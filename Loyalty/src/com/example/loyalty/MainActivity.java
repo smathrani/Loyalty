@@ -9,7 +9,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -19,7 +18,6 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TableLayout;
@@ -28,18 +26,18 @@ import android.widget.TableRow.LayoutParams;
 import android.widget.TextView;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class MainActivity extends Activity {
-	SharedPreferences prefs;// = getSharedPreferences("com.example.loyalty", 0);
-	SharedPreferences.Editor edit;// = prefs.edit();
-	TextView t;// = (TextView) findViewById(R.id.textView1);
+	SharedPreferences prefs;
+	SharedPreferences.Editor edit;
+	TextView t;
 	Handler handler;
 	final int ERR = -1;
 	final int FINDRESTAURANTS = 1;
 	final int DEFAULT = 0;
 	final int PORT = 2000;
+	boolean first;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,18 +46,16 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.main_screen);
 		final ImageButton b = (ImageButton)findViewById(R.id.cameraButton);
 		Log.d("***", "kjbfv.zdfjv");
+		first = true;
 		b.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				Intent i = new Intent(MainActivity.this, CameraTestActivity.class);
 				startActivityForResult(i, 1);
-//				finish();
 			}
 		});
 		Log.d("***", "after button onclick");
 		prefs = getSharedPreferences("com.example.loyalty", 0);
-		//t = (TextView) findViewById(R.id.textView1);
 		final TableLayout names = (TableLayout) findViewById(R.id.table);
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
 		final int height = metrics.heightPixels;
@@ -72,7 +68,7 @@ public class MainActivity extends Activity {
 				Log.d("***handler rcvd", msg + "");
 				if (msg.what == ERR) // login successful or account created
 				{
-					//TODO DIEEEE
+					// DIEEEE
 				}
 				if(msg.what == FINDRESTAURANTS)
 				{
@@ -88,44 +84,20 @@ public class MainActivity extends Activity {
 						String name = stk.nextToken();
 						stk.nextToken();
 						String points = stk.nextToken();
-						View innerTable = createRow(name, points);
-						innerTable.setPadding(0, 0, 0, height/80);
-						names.addView(innerTable, new TableLayout.LayoutParams(
+						Card card = new Card(MainActivity.this);
+						if(first)
+						{
+							card.createBig(name, points);
+							first = false;
+						}
+						else card.createSmall(name, points);
+						names.addView(card, new TableLayout.LayoutParams(
 						LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 					}
 				}
 			}
 		};
 		new ServCon(PORT, handler, FINDRESTAURANTS+"findMyRestaurants").execute();
-/*		ArrayList<String> list = new ArrayList<String>();
-		try {
-			FileOutputStream fos1 = openFileOutput("storage_file", Context.MODE_PRIVATE);
-			Scanner s = new Scanner(openFileInput("storage_file"));
-			String write = "Testing write to file\n";
-			for(int i = 0; i < 200; i++)
-				fos1.write(write.getBytes());
-			while(s.hasNextLine())
-			{
-				String str = s.nextLine();
-				list.add(str);
-				TextView tv = new TextView(this);
-				tv.setText(str);
-				tv.setTextColor(Color.BLACK);
-				TableRow t = new TableRow(this);
-				t.addView(tv);
-				t.setOrientation(TableRow.HORIZONTAL);
-				names.addView(t, new TableLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-			}
-			
-			fos1.close();
-			s.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
-		// TableRow tr1 = new TableRow(this);
-		// tr1.setOrientation(TableRow.HORIZONTAL);
 	}
 	
 	@SuppressLint("ResourceAsColor")
@@ -248,10 +220,8 @@ public class MainActivity extends Activity {
 					h.sendMessage(h.obtainMessage(code, reply));
 				}
 			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (NullPointerException e) {
 				e.printStackTrace();
