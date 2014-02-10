@@ -2,6 +2,7 @@ package com.example.cards;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -59,7 +60,6 @@ public class Card extends TableLayout {
 		
 			ImageView logo = new ImageView(getContext());
 			logo.setBackgroundResource(R.drawable.a);
-	//		logo.setLayoutParams(oneHorizontal);
 			
 			TableLayout thirdTable = new TableLayout(getContext());
 			thirdTable.setOrientation(TableLayout.VERTICAL);
@@ -88,29 +88,17 @@ public class Card extends TableLayout {
 			LayoutParams topMargin = new LayoutParams();
 			topMargin.setMargins(0, 2, 0, 2);
 			
-			TextView row1 = new TextView(getContext());
-			row1.setText("row 1");
-			row1.setBackgroundColor(Color.WHITE);
-			row1.setLayoutParams(topMargin);
-			row1.setTextSize(20);
+			final TextView row1 = new TextView(getContext());
+			setupRow(row1, "row 1");
 			
 			TextView row2 = new TextView(getContext());
-			row2.setText("row 2");
-			row2.setBackgroundColor(Color.WHITE);
-			row2.setLayoutParams(margin);
-			row2.setTextSize(20);
+			setupRow(row2, "row 2");
 			
 			TextView row3 = new TextView(getContext());
-			row3.setText("row 3");
-			row3.setBackgroundColor(Color.WHITE);
-			row3.setLayoutParams(margin);
-			row3.setTextSize(20);
+			setupRow(row3, "row 3");
 
 			TextView row4 = new TextView(getContext());
-			row4.setText("row 4");
-			row4.setBackgroundColor(Color.WHITE);
-			row4.setLayoutParams(margin);
-			row4.setTextSize(20);
+			setupRow(row4, "row 4");
 
 			
 			bottom.addView(row1);
@@ -123,7 +111,7 @@ public class Card extends TableLayout {
 		
 		addView(table);
 		
-		setOnClickListener(new OnClickListener() {
+		top.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -131,6 +119,22 @@ public class Card extends TableLayout {
 			}
 		});
 		
+		bottom.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
+		
+	}
+	
+	private void setupRow(TextView row, String data)
+	{
+		row.setText(data);
+		row.setBackgroundColor(Color.WHITE);
+		row.setLayoutParams(margin);
+		row.setTextSize(20);
 	}
 	
 	
