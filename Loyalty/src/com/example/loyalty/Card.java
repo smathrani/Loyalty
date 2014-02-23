@@ -1,5 +1,9 @@
 package com.example.loyalty;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.StringTokenizer;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
@@ -11,7 +15,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-public class Card extends TableLayout {
+public class Card extends TableLayout implements Comparable<Card> {
 	
 	String name;
 	String points;
@@ -32,11 +36,35 @@ public class Card extends TableLayout {
 	private int height;
 	DisplayMetrics metrics = getResources().getDisplayMetrics();
 	
+	long time;
+	String currentReward;
+	String nextReward;
+	
 	public Card(Context context)
     {
         super(context);
 		height = metrics.heightPixels;
 		setPadding(0, 0, 0, height/40);
+	}
+	
+	public Card(Context context, String s)
+    {
+        this(context);
+        StringTokenizer stk = new StringTokenizer(s, ",");
+		time = Long.parseLong(stk.nextToken());
+		name = stk.nextToken();
+		points = stk.nextToken();
+		currentReward = stk.nextToken();
+		nextReward = stk.nextToken();
+	}
+	
+	public static ArrayList<Card> getCards(Context c, String unformatted) {
+		ArrayList<Card> cards = new ArrayList<Card>();
+		StringTokenizer tk = new StringTokenizer(unformatted, "\n");
+		while(tk.hasMoreTokens())
+			cards.add(new Card(c, tk.nextToken()));
+		Collections.sort(cards);
+		return cards;
 	}
 
 	public void createBig(String name, String points) {
@@ -131,7 +159,6 @@ public class Card extends TableLayout {
 				
 			}
 		});
-		
 	}
 	
 	private void setupRow(TextView row, String data)
@@ -141,7 +168,6 @@ public class Card extends TableLayout {
 		row.setLayoutParams(margin);
 		row.setTextSize(20);
 	}
-	
 	
 	public void createSmall(String name, String points)
 	{
@@ -208,6 +234,11 @@ public class Card extends TableLayout {
 			createSmall(this.name,this.points);
 		}
 		
+	}
+
+	@Override
+	public int compareTo(Card another) {
+		return ((Long) time).compareTo(another.time);
 	}
 	
 }

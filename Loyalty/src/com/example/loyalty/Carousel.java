@@ -24,7 +24,6 @@ public class Carousel extends Activity
 //			if(i==1)
 //				t.setScaleY((float) 2);
 			car.addView(t);
-			Log.d("Position:",t.getY()+"");
 		}
 	}
 }

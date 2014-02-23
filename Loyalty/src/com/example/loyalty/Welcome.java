@@ -13,8 +13,8 @@ public class Welcome extends FragmentActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-//	    startActivity(new Intent(Welcome.this, Carousel.class));
-	    if (savedInstanceState == null) {
+	    startActivity(new Intent(Welcome.this, Carousel.class));
+/*	    if (savedInstanceState == null) {
 	        // Add the fragment on initial activity setup
 	        mainFragment = new MainFragment();
 	        getSupportFragmentManager()
@@ -26,5 +26,5 @@ public class Welcome extends FragmentActivity
 	        mainFragment = (MainFragment) getSupportFragmentManager()
 	        .findFragmentById(android.R.id.content);
 	    }
-	}
+*/	}
 }

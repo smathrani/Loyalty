@@ -33,16 +33,17 @@ public class SignupScreen extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.singup_screen);
-		
+		Log.d("*******", "signing up");
 		//allowing access to the shared preferences
 		final SharedPreferences prefs = getSharedPreferences("com.example.loyalty", 0);
 		final SharedPreferences.Editor edit = prefs.edit();
 		
 		final TextView error = (TextView) findViewById(R.id.errorSignup);
-		final EditText username = (EditText) findViewById(R.id.username);
-		final EditText password = (EditText) findViewById(R.id.password);
+		final EditText username = (EditText) findViewById(R.id.usernameSignup);
+		final EditText password = (EditText) findViewById(R.id.passwordSignup);
 		final EditText email = (EditText) findViewById(R.id.emailSignup);
-		final Button signUp = (Button) findViewById(R.id.signupButton);
+		final Button signUp = (Button) findViewById(R.id.signup);
+		Log.d("*******", "signing up2");
 		
 		//creating the handler
 		final Handler handler = new Handler()
@@ -52,7 +53,7 @@ public class SignupScreen extends Activity {
 			{
 				Log.d("b", msg+"");
 				if(msg.what == 2) //login successful or account created
-				{	
+				{
 //					error.setText("available");
 					if(!prefs.contains("username") || prefs.getString("username", "").length() == 0)
 						edit.putString("username", username.getText()+"");
@@ -70,7 +71,7 @@ public class SignupScreen extends Activity {
 				}
 			}
 		};
-		
+		Log.d("*******", "signing up4");
 		signUp.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
@@ -82,7 +83,7 @@ public class SignupScreen extends Activity {
 				un = username.getText()+"";
 				pw = password.getText()+"";
 				em = email.getText()+"";
-				
+				Log.d("****", "signed up");
 				if (un.length()>0 && pw.length()>0 && em.length()>0)
 					new ServCon(LoginScreen.IP, port, handler, "signup\n"+un+"\n"+pw+"\n"+em+"\n\n").execute();
 				else
@@ -90,6 +91,7 @@ public class SignupScreen extends Activity {
 				
 			}
 		});
+		Log.d("*******", "signing up3");
 	}
 	
 	private class ServCon extends AsyncTask<String, Void, String>

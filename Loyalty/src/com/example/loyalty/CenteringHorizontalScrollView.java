@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.OverScroller;
 import android.widget.ScrollView;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -145,13 +146,13 @@ private void scrollToActiveItem() {
     View targetView = getLinearLayout().getChildAt(targetItem);
 //    super.smoothScrollTo(0, targetView.getBottom());
     ImageView centerImage = (ImageView)targetView;
-    int height=300;//set size of centered image
+//    int height=300;//set size of centered image
     LinearLayout.LayoutParams flparams = new LinearLayout.LayoutParams(height, height);
     centerImage.setLayoutParams(flparams);
 
     for(int i = 0; i < maxItemCount; ++i)
     {
-    	if(Math.abs(targetItem-i) > 1)
+    	/*if(Math.abs(targetItem-i) > 1)
     	{
     		ImageView othr = (ImageView) getLinearLayout().getChildAt(i);
     		int width = THIRD;
@@ -161,34 +162,44 @@ private void scrollToActiveItem() {
     	}
     	else if(i >= 0 && i < maxItemCount && i != targetItem) {
     		ImageView img = (ImageView) getLinearLayout().getChildAt(i);
+    		int[] loc = new int[2];
+    		img.getLocationOnScreen(loc);
+    		Log.d("**loc",i+":"+loc[0]+","+loc[1]);
     		int width = SECOND;
     		LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(width,width);
     		par.setMargins(25, 0,0,0);
     		img.setLayoutParams(par);
-    	}
-    }
-    for(int i = 0; i < maxItemCount; ++i)
-    {
-    	int x = 200;
-    	
-    		ImageView img = (ImageView) getLinearLayout().getChildAt(i);
-    		float y = img.getY();
-    		int width = FIRST;
-//    		if(!vis)
-    		{
-//    			width = 300-Math.abs(p.y);
-    		}
-    		LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(width, width);
-    		img.setLayoutParams(par);
-    	
+    	}*/
+    	ImageView img = (ImageView) getChildAtIndex(i);
+    	int[] loc = new int[2];
+    	img.getLocationOnScreen(loc);
+    	int dif = 0;
+//    	Log.d(i+"",loc[1]+"");
+    	int l = loc[1];
+    	if(l <= 400 && l >= 100)
+    		dif = 0;
+    	else if(l > 400)
+    		dif = l-400;
+    	else
+    		dif = 100-l;
+    	dif = Math.min(dif, height);
+    	dif = height - dif;
+    	float scale = (float) ((dif+.0)/(height+.0));
+    	scale = (float) Math.pow(scale, 2);
+    	scale = (float) Math.max(0.333, scale);
+    	if(img.getLayoutParams().height != 300)
+    		img.setLayoutParams(new LinearLayout.LayoutParams(300, 300));
+    	img.setScaleX(scale);
+    	img.setScaleY(scale);
     }
 
+    targetView = (ImageView) getLinearLayout().getChildAt(getMaxItemCount()-1);
     int targetLeft = targetView.getTop();
     int childWidth = targetView.getBottom() - targetLeft;
 
     int width = getHeight() - getPaddingTop() - getPaddingBottom();
     int targetScroll = targetLeft - ((width - childWidth) / 2);
-
+//    super.smoothScrollTo(0, targetScroll);
 }
 
 /**
@@ -209,6 +220,8 @@ public void setCurrentItemAndCenter(int currentItem) {
 	private static final int SWIPE_PAGE_ON_FACTOR = 10;
 	int minFactor = itemHeight / SWIPE_PAGE_ON_FACTOR;
 	Animate an;
+	DisplayMetrics metrics = getResources().getDisplayMetrics();
+	final int height = metrics.heightPixels;
 	
 	public class Animate implements Runnable {
 		Context context;
@@ -231,9 +244,12 @@ public void setCurrentItemAndCenter(int currentItem) {
 		public void run() {
 			// TODO Auto-generated method stub
 			if(mScroller.computeScrollOffset()) {
-				currX = mScroller.getCurrX();
-				currY = mScroller.getCurrY();
-				Log.d("****", "moving");
+//				currX = mScroller.getCurrX();
+				int newY = mScroller.getCurrY();
+				int dif = newY - currY;
+				currY = newY;
+//				Log.d("****", "moving");
+				CenteringHorizontalScrollView.this.scrollBy(0, -dif);
 				scrollToActiveItem();
 				post(this);
 			}
@@ -241,13 +257,22 @@ public void setCurrentItemAndCenter(int currentItem) {
 		
 		public boolean onContentFling(MotionEvent e1, MotionEvent e2, float velX, float velY)
 		{
-			mScroller.fling(currX, currY, (int) velX, (int) velY, 0, 0, -3000, 3000, 500, 500);
+			int[] location = new int[2];
+			getChildAtIndex(getMaxItemCount()-1).getLocationOnScreen(location);
+			Log.d("***************", location[1]+"");
+//			mScroller.fling(currX, currY, (int) velX, (int) velY, 0, 0, 0, location[1]);
+			mScroller.fling(currX, currY, (int) velX, (int) velY, 0, 0, -3000, 25000, 0, 0);
 //			mScroller.fl
 //			scrollToActiveItem();
 			post(this);
 			return true;
 		}
 		
+		public void doScroll(float distanceY)
+		{
+			mScroller.startScroll(currX, currY, 0, -(int) distanceY);
+			post(this);
+		}
 	}
 	
 	public CenteringHorizontalScrollView(Context c, AttributeSet attrs)
@@ -273,8 +298,10 @@ public void setCurrentItemAndCenter(int currentItem) {
 			@Override
 			public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
 					float distanceY) {
-				an.mScroller.startScroll((int)e1.getX(),(int) e1.getY(),(int) distanceX,(int) distanceY);
-				Log.d("****","scroll");
+//				an.doScroll(distanceY);
+//				an.mScroller.startScroll(an.mScroller., startY, dx, dy)
+//				an.mScroller.startScroll((int)e1.getX(),(int) e1.getY(),(int) distanceX,(int) distanceY);
+//				Log.d("****","scroll");
 /*				int dif = (int) distanceY/70;
 				cur += dif;
 				Log.d(cur+"",dif+"");
@@ -317,6 +344,10 @@ public void setCurrentItemAndCenter(int currentItem) {
 	
 	private int getMaxItemCount() {
 	    return ((LinearLayout) getChildAt(0)).getChildCount();
+	}
+	
+	private View getChildAtIndex(int index) {
+		return getLinearLayout().getChildAt(index);
 	}
 	
 	@Override
